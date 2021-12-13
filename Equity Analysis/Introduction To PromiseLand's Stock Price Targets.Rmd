@@ -1,0 +1,181 @@
+---
+title: "Introduction to PromiseLand's Stock Price Targets"
+author: 
+- Caleb Ong Jun Yi
+date: "Last Updated: `r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[R]{\small \leftmark}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial adviser before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+
+\newpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', fig.width = 10, fig.height = 6)
+```
+
+```{r, load plots, include=FALSE, message=FALSE}
+load('stockClientPlot.RData')
+
+library(magrittr)
+library(ggplot2)
+library(ggthemes)
+```
+
+\newpage
+ 
+# Introduction
+
+Clients may wish to include stocks in their investment portfolio to enhance the return of their portfolio. The returns of stocks are driven primarily by systematic factors and company-specific factors. Investing in stocks can allow investors to capture returns that arise from both market events and company idiosyncracies. 
+
+At the present moment, stock advisory and price targets are provided only for US listed equities. Extensive cross sectional and time series analysis are conducted on company data to generate one step ahead forecasts of stock price targets. Clients can use the expected price targets to aid in their investment decision-making process.
+
+# Methodology
+
+Fundamental analysis and technical analysis are utilized in the stock forecasting models. Many factors that contribute to the valuation of stocks are incorporated into the models. Some factors include financial statements data and company performance metrics. The information is then synthesized; any changes in trend over time is analyzed. In addition, the relative performance of the stock is compared to that of other similar stocks, its sector, and the broader market. 
+
+The future point of the forecast horizon is set at a quarter (three months) from the most recent date of release of the company's financial statements. Generally, the future point approximates the date of release of the company's next financial statements. When new data is released, it is incorporated into the models. The models are then updated for the next round of forecasts.
+
+\newpage
+
+# Illustrative Example
+
+The data of Apple Inc. (NASDAQ: AAPL) is used to illustrate some of the analyses that are conducted.
+
+## Fundamental Valuation Metrics
+
+Relative valuation metrics are used in the analysis, and compared across time. Price-to-Earnings and Price-to-Book ratios are some examples of fundamental valuation metrics that are incorporated into the analysis.
+
+```{r, show pepbplot, echo=FALSE, message=FALSE, warning=FALSE}
+pepbPlot + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+\newpage
+
+## Financial Statements Analysis
+
+Extensive analysis is performed on the Statement of Profit and Loss, Balance Sheet, and Statement of Cash Flows. Furthermore, the financial statements are analyzed at the accounting-item level. In addition, common-sized financial statements analysis is performed. Trend and seasonality effects are also incorporated into the analysis.
+
+The following examples illustrate some data from the Statement of Profit and Loss that are used in the analysis.
+
+```{r, show plPlot, echo=FALSE, message=FALSE, warning=FALSE}
+plPlot + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+In this example, the various Income Statement items exhibit trend and seasonality effects. Both these effects and the Income Statement item values contribute to the current and expected valuations of the stock.
+
+```{r, show plcsPlot, echo=FALSE, message=FALSE, warning=FALSE}
+plcsPlot + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+Common-sized financial statement analysis express the value of each accounting item as a percentage of a base amount in that particular period. The results are analysed across time to identify any material composition changes in the financial statements.
+
+The following examples illustrate some data from the Balance Sheet that are used in the analysis.
+
+```{r, show bsPlot, echo=FALSE, message=FALSE, warning=FALSE}
+bsPlot + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+```{r, show bscsPlot, echo=FALSE, message=FALSE, warning=FALSE}
+bscsPlot + labs(title = 'Common-Sized Balance Sheet Analysis', subtitle = 'Data is reported on a quarterly basis.')
+```
+
+The presence of trend and seasonality effects are apparent as well. Performing time series analysis at the accounting-item level allows for the identification of trends in the financial statement items that could explain the performance of the price of the stock.
+
+Similar techniques are also applied to the Statement of Cash Flows.
+
+\newpage
+
+## Ratio Analysis
+
+The efficiency, profitability, liquidity, and solvency of the company is also analyzed, in the form of ratio analysis. 
+
+```{r, show ratioplot, echo=FALSE, message=FALSE, warning=FALSE}
+ratioplot + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+## Cross Sectional Analysis
+
+The aforementioned steps are applied to all stocks. The results of the analysis are then compared and contrasted across all companies. Comparing the data of the company to that of similar companies can provide valuable insights, such as the company’s relative ranking against its peers, and the company's performance prospects. Doing so also provides valuable insights for companies that have a shorter operating history.
+
+\newpage
+
+## Modelling Stock Prices
+
+Extensive financial modelling and time series analysis are then conducted on all stocks. Numerous data points are used to predict the expected values of all stocks at prior particular points in time. The following charts illustrate the results of the analysis of a subset of stocks.
+
+```{r, show testplot, echo=FALSE, message=FALSE, warning=FALSE}
+testplot + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+\newpage
+
+The predicted values of all stocks are then compared to the actual values to assess the effectiveness of the models. Models with the best ability to generalize predictions across all stocks are then selected.
+
+```{r, show ablinePlot, echo=FALSE, message=FALSE, warning=FALSE}
+ablineplot + theme_fivethirtyeight()+
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        panel.grid.major =  element_line(color = "#d0d0d0"),
+        legend.position = 'bottom',
+        legend.box = 'vertical') + 
+  theme(text = element_text(family = "Times")) + ylab('Predicted Values') + xlab('Actual Values') +
+  labs(title = 'Predicted Results versus Actual Observations') +
+  guides(color = guide_legend(order = 1,
+                              nrow = 3,
+                              byrow = FALSE),
+         size = guide_legend(order = 2,
+                             byrow = FALSE)) + labs(subtitle = 'Data is reported on a quarterly basis.')
+```
+
+\newpage
+
+Once the optimal models are selected, one step ahead forecasts are made. The future point of the forecast horizon is set at a quarter (three months) from the most recent date of release of the company's financial statements.
+
+```{r, show futureplot, echo=FALSE, message=FALSE, warning=FALSE}
+futureplot + labs(title = 'One Step Ahead Forecasts', subtitle = 'Data is reported on a quarterly basis.')
+```
+
+The models are updated for the next round of forecasts by incorporating the latest financial statements information when such information is released.
+
+\newpage
+
+# Risks
+
+The models incorporate only all available information up to the time the forecast is made, which include the latest financial statements and market data. The release of new company-specific information and the occurrence of unexpected market events in the periods since then can affect the subsequent valuation of stocks. As with all financial models, they provide only a generalization of what an outcome is expected to be. 
+
+# Ending Notes
+
+Clients are reminded to diligently monitor their holdings. Please contact your financial advisor for the latest price targets, or if you have any questions. Alternatively, you may contact us at +65 6505 4100, or email us at <enquiries@promiseland.com.sg>.
+
