@@ -58,7 +58,7 @@ At the present moment, stock advisory and price targets are provided only for US
 
 # Methodology
 
-Fundamental analysis and technical analysis are utilized in the stock forecasting models. Many factors that contribute to the valuation of stocks are incorporated into the models. Some factors include financial statements data and company performance metrics. The information is then synthesized; any changes in trend over time is analyzed. In addition, the relative performance of the stock is compared to that of other similar stocks, its sector, and the broader market. 
+The latest, cutting-edge data analytics and forecasting tools are employed. Fundamental analysis and technical analysis are utilized in the models. Many factors that contribute to the valuation of stocks are incorporated into the models. Some factors include financial statements data and company performance metrics. The information is then synthesized; any changes in trend over time is analyzed. In addition, the relative performance of the stock is compared to that of other similar stocks, its sector, and the broader market. 
 
 The future point of the forecast horizon is set at a quarter (three months) from the most recent date of release of the company's financial statements. Generally, the future point approximates the date of release of the company's next financial statements. When new data is released, it is incorporated into the models. The models are then updated for the next round of forecasts.
 
