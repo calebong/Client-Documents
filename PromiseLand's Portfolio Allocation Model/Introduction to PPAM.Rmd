@@ -1,0 +1,169 @@
+---
+title: "Introduction To PromiseLand’s Portfolio Allocation Model (PPAM)"
+author: 
+- Wealth Management Department
+date: "Last Updated: `r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial advisor before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', fig.width = 10, fig.height = 10)
+```
+
+```{r, load packages, include=FALSE, message=FALSE}
+# library(quantmod)
+# library(MSGARCH)
+# library(PerformanceAnalytics)
+# library(RQuantLib)
+# library(reshape2)
+# library(akima)
+# library(riingo)
+# library(rugarch)
+# library(ggplot2)
+# library(plotly)
+# library(ggridges)
+# library(tidyverse)
+# library(forecast)
+# library(ggthemes)
+# library(RColorBrewer)
+# library(jsonlite)
+# library(derivmkts)
+# library(pbapply)
+library(kableExtra)
+library(purrr)
+library(readr)
+library(dplyr)
+library(data.table)
+library(tibble)
+```
+
+\newpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\newpage
+
+# PromiseLand's Investment Capabilities
+
+Our service does not start when we first meet with our clients. It begins way back when our Financial Advisor Representatives sweat it out in weekly trainings. Our in-house investment specialists go through a thorough process of analyzing the huge universe of thousands of Unit Trust funds, to narrow down the list of best-in-breed funds. This rigorous process is repeated regularly to ensure the funds we utilize are always the best. Our process of selecting funds starts with scrutinizing the fund managers and their investment philosophy for the various funds in their suite of offerings. We also look into historical, economical, political and other pertinent factors which can affect markets in different continents, regions and countries.
+
+Our Financial Advisor Representatives are constantly updated through regular in-house briefings and discussions. We understand that the investment market is dynamic and that today’s star performers can be tomorrow’s duds.
+
+Fund managers may be the ones who manage the investments, but that does not mean that we take our responsibility lightly. We monitor their performance religiously, and ensure that the fund managers deliver a reasonable level of performance consistently. Fund managers may come and go but PromiseLand keeps in close contact with the present fund managers and have direct access to them. Fund managers visit PromiseLand to brief us on their fund performance regularly. We ask raise hard questions to them on your behalf. 
+
+We do not manage our own funds, ensuring that we are truly independent when it comes to our recommendations as we do not have any vested interest in the funds. PromiseLand is proud to operate as a truly independent Financial Adviser that is committed to serving our clients objectively and fairly. 
+
+Our Financial Advisor Representatives are well-trained and committed to serving our clients. Unlike other institutions where these professionals may come and go, our Financial Advisor Representatives stick with you unless you opt for a change. Clients can expect a close relationship with our Financial Advisor Representatives who truly work for your best interests.
+
+# Benefits of the PPAM
+
+The intention of the PPAM is to offer PromiseLand’s clients an option to invest a single sum of money into a range of 1) asset classes, 2) geographical regions, 3) investment strategies, and 4) fund managers in order to enjoy the risk reduction advantage of having a diversified investment portfolio. The PPAM also saves clients’ time by removing the need for them to monitor and rebalance their own investment portfolios. PromiseLand will be leveraging on the portfolio rebalancing tools offered by the platforms (FAME, Navigator and iFast) to conduct regular rebalancing on investment portfolios that are tagged to the PPAM. This service will not be available on the Havenport platform. The PPAM will be supported by Technical Analysis, Fundamental Analysis and Fund Manager Comparison Analysis.
+
+## Technical Analysis (TA)
+
+The philosophy underlying the technical calculations is based off the financial concept of “mean reversion”. Our technical indicators attempt to spot opportunities in the market to enter when the price is “low”. On the other hand, when prices are deemed to be “high”, the technical indicators would signal for the investment team to reduce exposure. Technical analysis is given a weightage of 25% in determining our rebalancing decisions.
+
+## Fundamental Analysis (FA)
+
+Fundamental analysis support comes from the PromiseLand’s Investment Research Framework (PIRF). The investment team in PromiseLand analyzes critical public information to come up with estimated intrinsic values for different markets to drive investment allocation decisions. Fundamental analysis includes macroeconomic analysis, business cycle analysis and industry analysis. Fundamental analysis is given a weightage of 75% in determining our rebalancing decisions. 
+
+## Fund Manager Comparison Analysis
+
+With the asset allocation decisions finalized through TA and FA, the remaining step in the PPAM involves deciding on the appropriate funds to pursue our investment objectives. The fund manager comparison analysis step involves using our existing PromiseLand’s Fund Selection Criterion (PFSC). This is a rigorous and systematic Fund Managers selection process that relies on 7 different criteria.
+
+# Available Model Portfolios
+
+There will be a choice of 15 investment portfolios within the PPAM. Clients can choose to invest using CASH or CPFOA/SRS. Each class is further divided into five categories based on clients’ desired risk tolerance preference. These include Conservative, Moderately Conservative, Balanced, Moderately Aggressive and Aggressive. Please speak with your friendly PromiseLand Financial Advisor Representative to find out which risk profile may be more suitable for your unique investment objective.
+
+# Minimum Investment Size
+
+For iFast, the minimum investment amount is \$1,000. Clients may also opt for a Regular Savings Plan (RSP) for iFast, with a minimum amount of $500. For Navigator and FAME, the minimum investment amount is \$30,000. 
+
+# Account Type
+
+The investment account opened must be under a Wrap Account model. Please speak with your friendly PromiseLand Financial Advisor Representative to find out about the differences between a non-wrap account and a wrap account.
+
+
+\newpage
+
+# Strategic Asset Allocation (SAA)
+
+SAA is based on the clients’ risk tolerance preference. At present, we have 15 existing SAA models. In order to achieve reasonable diversification among Fund Managers, each Fund Manager cannot be repeated for each Portfolio, as much as possible. Funds will be selected primarily to ensure geographical diversification in order to minimize unsystematic risk.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+tibble::tibble(Cash = c('Equity','Fixed Income'), 
+               Conservative = c('30-50','50-70'),
+               `Moderately Conservative` = c('40-60','40-60'),
+               Balanced = c('45-65','35-55'),
+               `Moderately Agressive` = c('55-75','25-45'),
+               Agressive = c('70-90','10-30')) %>% 
+  kable(col.names = c('Cash','Conservative','Moderately Conservative','Balanced','Moderately Aggressive','Aggressive'),
+        align = 'cccccc',
+        caption = 'Strategic Asset Allocation for Cash (\\%)',
+        format = 'latex',
+        booktabs = TRUE) %>%
+  kable_styling(latex_options = c("scale_down", "HOLD_position")) 
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+tibble::tibble(`CPFOA/SRS` = c('Equity','Fixed Income'), 
+               Conservative = c('30-50','50-70'),
+               `Moderately Conservative` = c('40-60','40-60'),
+               Balanced = c('45-65','35-55'),
+               `Moderately Agressive` = c('55-75','25-45'),
+               Agressive = c('65-85','15-35')) %>% 
+  kable(col.names = c('CPFOA/SRS','Conservative','Moderately Conservative','Balanced','Moderately Aggressive','Aggressive'),
+        align = 'cccccc',
+        caption = 'Strategic Asset Allocation for CPFOA/SRS (\\%)',
+        format = 'latex',
+        booktabs = TRUE) %>%
+  kable_styling(latex_options = c("scale_down", "HOLD_position")) 
+```
+
+# Tactical Asset Allocation (TAA)
+
+TAA seeks to improve on the risk-adjusted returns of the SAA by increasing (decreasing) exposure into asset classes/regions that are expected to outperform (underperform). Tactical asset allocation decisions will be based off technical and fundamental analysis. No asset class/region/fund will be over/under-weighted by more than 5% of that dictated by the SAA. We cannot risk tactical asset allocation to make redundant our goal of investment diversification.
+
+# Rebalancing Schedule
+
+With the final asset allocation percentages ascertained via SAA and TAA, all new monies placed within the PPAM will be invested as such. Existing invested monies in the PPAM will be rebalanced to meet these same asset allocation percentages during the rebalancing timeline. Rebalancing will be done on a quarterly basis. The expected rebalancing period falls on the last week of January, April, July and October. Clients retain the right to accept or reject each quarterly rebalancing recommendation.
+
+# Additional Information
+
+If any fund in the portfolio falls below its operationally minimum switching amount, the rebalancing of the client’s portfolio will not go through. As a result, the client is at a disadvantage as the portfolio allocation has deviated from the ideal asset allocation and yet rebalancing is unable to proceed, thus bringing about unnecessary investment risk for clients. 
+
+To ensure that our clients’ portfolios will be rebalanced each quarter, at each rebalancing all of the funds in the current portfolio will have to be switched into a new set of fund combination which follows the same breakdown into geographic region and asset class. This solution allows PromiseLand to keep the minimum investment sum of the PPAM at a low level of $30,000, while ensuring that the quarterly rebalancing of client’s portfolios can be effected, despite the existence of the operational minimum switch amounts set by the Fund Managers. 
+
+Clients should not be surprised if they observe that their portfolios are invested in the same funds for alternate quarters. For example, the same funds invested in the first quarter are the same as the third quarter, and the same funds invested in the second quarter are the same funds for the fourth quarter portfolio. Clients ultimately benefit from these changes because this also means that an investor would effectively have her portfolio invested into 12 different funds over each investment year.
+
+
+# Ending Notes
+
+Please contact your friendly PromiseLand Financial Advisor Representative if you have further questions on the PPAM. You can also contact your friendly PromiseLand Financial Advisor Representative to
+understand how you can start a PPAM Investment Portfolio today.
+
+If you do not already have a dedicated PromiseLand Financial Advisor Representative serving your financial needs, please contact PromiseLand at +65 6505 4100 or email us at <enquiries@promiseland.com.sg>. We will arrange for a PromiseLand Financial Advisor Representative to attend to your unique investment needs.
