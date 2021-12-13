@@ -1,0 +1,127 @@
+---
+title: "Introduction to PromiseLand's Economic Forecasts"
+author: 
+- Caleb Ong Jun Yi
+date: "Last Updated: `r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[R]{\small \leftmark}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial adviser before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+
+\newpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', fig.width = 10, fig.height = 6)
+```
+
+```{r, load plots, include=FALSE, message=FALSE}
+load('stockClientPlot.RData')
+
+library(magrittr)
+library(ggplot2)
+library(ggthemes)
+```
+
+\newpage
+ 
+# Introduction
+
+Economic forecasting is the process of making predictions about the economy using a selection of economic indicators. Future expected returns of asset classes and sectors can be derived through extensive modelling of macroeconomic data and past returns. Such forecasts can aid in setting short-term expectations for making active investment decisions, as well as formulating long-term expectations for effective asset allocation and risk management. 
+
+
+Clients may feel daunted if they have to assess and interpret large swathes of economic data in order to develop future market expectations. We conduct rigorous analyses of various economic data through time to develop models that can derive future market expectations. Clients can use the expected future returns to aid in their investment decision-making process. 
+
+# Methodology
+
+
+The latest, cutting-edge data analytics and forecasting tools are employed. Advanced macroeconomic data modelling and time series analysis are used in the economic forecasting models. Economic data and indicators are gathered from numerous data sources and scrutinized carefully. The information is then synthesized; any changes in trend over time is analyzed.
+
+Once the models are finalized, one step ahead forecasts of one month are made. Forecasts are generally made during the last week of the current month. Accordingly, the future point of the forecast horizon is set at the end of the next calendar month. When new economic data is released, it is incorporated into the models. The models are then updated for the next round of forecasts.
+
+\newpage
+
+# Illustrative Example
+
+US macroeconomic data and indicators are used to illustrate some of the analyses that are conducted.
+
+## Economic Indicators
+
+Numerous economic indicators are screened for their ability to explain the performance of various market sectors, and compared across time. Some of the information utilized is illustrated in the following charts.
+
+```{r, show indplot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=9}
+indplot
+```
+
+```{r, show marketplot, echo=FALSE, message=FALSE, warning=FALSE}
+marketplot
+```
+
+
+Trend and seasonality effects are also incorporated into the analysis, if applicable.
+
+\newpage
+
+## Modelling Sector Returns
+
+After extensive financial modelling and time series analysis are conducted on all market sectors, the expected monthly returns of all sectors at prior particular points in time are then predicted. 
+
+```{r, show sectortestplot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=12}
+sectortestplot
+```
+
+```{r, show factortestplot, echo=FALSE, message=FALSE, warning=FALSE}
+factortestplot
+```
+
+The predicted expected returns of all sectors are then compared to the actual returns to assess the effectiveness of the models. Models with the best ability to generalize predictions across all sectors are then selected.
+
+\newpage
+
+Once the optimal models are selected, one step ahead forecasts are made. Forecasts are generally made during the end of the current month. Accordingly, the future point of the forecast horizon is set at the end of the next calendar month.
+
+```{r, sectorfutureplot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=12}
+sectorfutureplot
+```
+
+```{r, factorfutureplot, echo=FALSE, message=FALSE, warning=FALSE}
+factorfutureplot
+```
+
+The models are updated for the next round of forecasts by incorporating the latest economic data when such data is released.
+
+\newpage
+
+# Risks
+
+The models incorporate only all available information up to the time the forecast is made, which include the latest economic data and indicators. The occurrence of unexpected market events in the periods since then can affect future expected returns. As with all financial models, they provide only a generalization of what an outcome is expected to be. 
+
+# Ending Notes
+
+Clients are reminded to diligently monitor their holdings. Please contact your financial advisor for the latest market expectations, or if you have any questions. Alternatively, you may contact us at +65 6505 4100, or email us at <enquiries@promiseland.com.sg>.
+
