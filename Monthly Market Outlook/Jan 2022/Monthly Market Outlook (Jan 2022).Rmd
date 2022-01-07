@@ -1,0 +1,376 @@
+---
+title: "PromiseLand's Monthly Market Outlook"
+subtitle: 'For January 2022'
+author: 
+- Caleb Ong Jun Yi
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+    keep_md: true
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[R]{\small \leftmark}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial adviser before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+
+\newpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', fig.width = 10, fig.height = 6)
+```
+
+```{r, load libs, include=F, warning=F, message=F}
+library(ggplot2)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+```
+
+
+```{r, load datas, include=F, warning=F, message=F}
+load("~/Documents/Working Directory/Market-Forecast/USA/usSector.RData")
+load("~/Documents/Working Directory/Market-Forecast/China/cnSector.RData")
+load("~/Documents/Working Directory/Market-Forecast/Europe/euSector.RData")
+
+load("~/Documents/Working Directory/Market-Forecast/USA/usMacDf.RData")
+load("~/Documents/Working Directory/Market-Forecast/China/cnMacDf.RData")
+load("~/Documents/Working Directory/Market-Forecast/Europe/euMacDf.RData")
+```
+
+```{r, include=FALSE, eval=F}
+usMacDfRet %>% ungroup() %>% 
+  select(-contains('lag')) %>% 
+  select(-ticker,
+         -adjClose) %>% 
+  pivot_longer(cols = 2:32) %>% 
+  ggplot(aes(x = date, y =value)) + geom_line() + facet_wrap(~name, scales = 'free_y')
+  
+```
+
+# USA
+
+## Monthly Review
+
+Consumer Staples, Healthcare, and Utilities were the winners for December 2021, with returns registering at 9.12%, 8.29%, and 8% respectively. The stellar performance of these sectors could be attributed to greater sector rotations into such defensive sectors, which tend to perform well during periods of economic stresses. The heightened activity occurred amidst the backdrop of the fresh and emerging Omicron coronavirus variant, which has sent jitters throughout the financial markets, propelling fears that the new variant could derail economic growth.
+
+The impact of the new variant is also evident in the bottom-performing sectors, which are mainly the cyclical and growth sectors. Consumer Discretionary fared the worst, with a return of approximately 0.55%.
+
+
+```{r, create mtd us, message=F, echo=F}
+usRankMthTable <- usRankMthTable %>% 
+  mutate(adjClose = signif(adjClose, 3)*100)
+```
+
+```{r, show us mtd plot, message=F, echo=F}
+usRankMthTable %>% 
+  ggplot(aes(x = reorder(title, -adjClose), y = adjClose)) + geom_bar(stat = 'identity', fill = 'midnightblue') +
+  theme_fivethirtyeight() +
+  labs(title = 'USA Sector Returns', subtitle = "Source: Bloomberg, author's compilation \nData as of Dec 2021") +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90)) + theme(text = element_text(family = "Times")) +
+  ylab('Month-to-Date Returns (%)')
+
+```
+
+
+```{r, show us mtd, message=F, echo=F}
+kable(
+  usRankMthTable %>% arrange(desc(adjClose)),
+  col.names = c('Sector',
+                'Return'),
+  align = 'cc',
+  caption = 'USA Sector Monthly Returns (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+
+## Monthly Outlook
+
+Preliminary research has indicated that the Omicron coronavirus variant, while more contagious, is less lethal than the Delta coronavirus variant. This has calmed market nerves, spurring sentiments that the market is still well on track towards economic growth. Economic indicators still look promising; for instance, the ISM United States Manufacturing Purchasing Managers Index and Non-Manufacturing Purchasing Managers Index stand at 61.1 and 69.1 respectively, with the latter at all time highs.
+
+While such news are good, the dangers of sustained high inflation looms in the horizon. We are already seeing sustained and elevated Producer Price Index and Consumer Price Index levels. The Fed signaled that it will make aggressive policy moves in response to rising inflation, including accelerating the reduction of its monthly bond purchases. Fed officials also see as many as three rate hikes coming next year.
+
+## Base Case Estimates
+
+Our models have considered all the information set up to this point, and estimated the relative rankings and sector return expectations.
+
+```{r, create future us, message=F, echo=F}
+usRankTable <- usRankTable %>% 
+  mutate(across(.cols = where(is.numeric),
+                .fns = function(.x) signif(.x, 3)*100 ))
+```
+
+```{r, show us future kable, message=F, echo=F}
+kable(
+  usRankTable %>% arrange(desc(.value)),
+  col.names = c('Sector',
+                'Expected Return',
+                'Bear Case',
+                'Bull Case'),
+  align = 'cc',
+  caption = 'USA Sector Return Expectations (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+In light of still-present inflationary pressures, we advocate allocating a greater proportion of portfolio holdings into the Value, Financials, Utilities and Real Estate sectors. Value stocks tend to do well during periods of sustained high inflation, and Real Estate can offer a value hedge against inflation in this current period. Financials could offer some decent upside opportunity as investors prepare for an inevitable rate hike, and Utilities, being a defensive sector, could provide additional diversification benefits and downside protection.
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=12}
+usSectorfutureplot
+```
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+usFactorfutureplot
+```
+
+\newpage
+
+# Europe
+
+```{r, include=FALSE, eval=F}
+euMacDfRet %>% ungroup() %>% 
+  select(-contains('lag')) %>% 
+  select(-ticker,
+         -adjClose) %>% 
+  pivot_longer(cols = 2:25) %>% 
+  ggplot(aes(x = date, y =value)) + geom_line() + facet_wrap(~name, scales = 'free_y')
+  
+```
+
+## Monthly Review
+
+Industrials, Energy, and Materials were the winners for December 2021. Despite elevated price levels, Europe has performed well across the board, with the exception of Consumer Staples and Consumer Discretionary.
+
+
+```{r, create mtd eu, message=F, echo=F}
+euRankMthTable <- euRankMthTable %>% 
+  mutate(adjClose = signif(adjClose, 3)*100)
+```
+
+```{r, show eu mtd plot, message=F, echo=F}
+euRankMthTable %>% 
+  ggplot(aes(x = reorder(title, -adjClose), y = adjClose)) + geom_bar(stat = 'identity', fill = 'midnightblue') +
+  theme_fivethirtyeight() +
+  labs(title = 'Europe Sector Returns', subtitle = "Source: Bloomberg, author's compilation \nData as of Dec 2021") +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90)) + theme(text = element_text(family = "Times")) +
+  ylab('Month-to-Date Returns (%)')
+
+```
+
+
+```{r, show eu mtd, message=F, echo=F}
+kable(
+  euRankMthTable %>% arrange(desc(adjClose)),
+  col.names = c('Sector',
+                'Return'),
+  align = 'cc',
+  caption = 'Europe Sector Monthly Returns (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+## Monthly Outlook
+
+Economic indicators still look promising; for instance, the Markit European Union Services Purchasing Managers Index and Manufacturing Purchasing Managers Index stand at and 53.3 and 58 respectively. The European Union Industrial Confidence Indicator also remain at elevated levels, which signal improvements in manufacturing sector conditions.
+
+Like US, the dangers of sustained high inflation looms in the horizon. We are also seeing sustained and elevated Producer Price Index and Consumer Price Index levels. Major European indices have been hovering below their all time highs, as investors remain cautious due to uncertainty surrounding the economic outlook amid a spike in coronavirus cases. Investors are also digesting the beginning of the tightening cycles of monetary policies in major central banks.
+
+## Base Case Estimates
+
+Our models have considered all the information set up to this point, and estimated the relative rankings and sector return expectations.
+
+```{r, create future eu, message=F, echo=F}
+euRankTable <- euRankTable %>% 
+  mutate(across(.cols = where(is.numeric),
+                .fns = function(.x) signif(.x, 3)*100 ))
+```
+
+```{r, show eu future kable, message=F, echo=F}
+kable(
+  euRankTable %>% arrange(desc(.value)),
+  col.names = c('Sector',
+                'Expected Return',
+                'Bear Case',
+                'Bull Case'),
+  align = 'cc',
+  caption = 'Europe Sector Return Expectations (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+In light of recent uncertainties in the European markets stemming from a spike in coronavirus cases in the winter months and sustained inflationary pressures, we advocate allocating a greater proportion of portfolio holdings into the Real Estate, Europe Large Cap, and Europe Value sectors. Value stocks tend to do well during periods of sustained high inflation, and Real Estate can offer a value hedge against inflation in this current period. Large caps tend to provide some volatility cushioning during rough and uncertain markets, as Large Caps tend to be more mature companies. 
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14}
+euSectorfutureplot
+```
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+euFactorfutureplot
+```
+
+
+\newpage
+
+# China
+
+```{r, include=FALSE, eval=F}
+cnMacDfRet %>% ungroup() %>% 
+  select(-contains('lag')) %>% 
+  select(-ticker,
+         -adjClose) %>% 
+  pivot_longer(cols = 2:13) %>% 
+  ggplot(aes(x = date, y =value)) + geom_line() + facet_wrap(~name, scales = 'free_y')
+  
+```
+
+## Monthly Review
+
+The performance for China has faltered across the board, with the exception of Energy and Financials. It seems to be evident that the current plays in the market are in the Energy sector, which tends to provide a hedge against inflation. The uncertainties with regards to crackdown measures and extended coronavirus lockdowns contributed to the poor performance across the board.
+
+```{r, create mtd cn, message=F, echo=F}
+cnRankMthTable <- cnRankMthTable %>% 
+  mutate(adjClose = signif(adjClose, 3)*100)
+```
+
+```{r, show cn mtd plot, message=F, echo=F}
+cnRankMthTable %>% 
+  ggplot(aes(x = reorder(title, -adjClose), y = adjClose)) + geom_bar(stat = 'identity', fill = 'midnightblue') +
+  theme_fivethirtyeight() +
+  labs(title = 'China Sector Returns', subtitle = "Source: Bloomberg, author's compilation \nData as of Dec 2021") +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90)) + theme(text = element_text(family = "Times")) +
+  ylab('Month-to-Date Returns (%)')
+
+```
+
+
+```{r, show cn mtd, message=F, echo=F}
+kable(
+  cnRankMthTable %>% arrange(desc(adjClose)),
+  col.names = c('Sector',
+                'Return'),
+  align = 'cc',
+  caption = 'China Sector Monthly Returns (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+
+## Monthly Outlook
+
+Economic indicators generally remain 'neutral'; for instance, the Caixin China Manufacturing Purchasing Managers Index and Services Manufacturing Purchasing Managers Index stand at 49.9 and 52.1. This could signal a slowdown in the economy, as there are indications that manufacturing business activity is slowing down. It also does not help that the current scenario is coupled with elevated Production Price Levels, which indicates a general increase in the value of goods manufactured by producers.
+
+## Base Case Estimates
+
+Our models have considered all the information set up to this point, and estimated the relative rankings and sector return expectations.
+
+```{r, create future cn, message=F, echo=F}
+cnRankTable <- cnRankTable %>% 
+  mutate(across(.cols = where(is.numeric),
+                .fns = function(.x) signif(.x, 3)*100 ))
+```
+
+```{r, show cn future kable, message=F, echo=F}
+kable(
+  cnRankTable %>% arrange(desc(.value)),
+  col.names = c('Sector',
+                'Expected Return',
+                'Bear Case',
+                'Bull Case'),
+  align = 'cc',
+  caption = 'China Sector Return Expectations (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+In light of recent uncertainties in China markets, we advocate for prudent monitoring of sector performances for the coming month, given the poor return expectations for China, and the fact that market conditions can change over the course of the month.
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=12}
+cnSectorfutureplot
+```
+
+\newpage
+
+# Ending Notes
+
+Please refer to our client introductory document (Introduction to PromiseLand's Economic Forecasts) for a brief description of our methodology. 
+
+Clients are reminded to diligently monitor their holdings. Please contact your financial advisor for the latest market expectations, or if you have any questions. Alternatively, you may contact us at +65 6505 4100, or email us at <enquiries@promiseland.com.sg>.
