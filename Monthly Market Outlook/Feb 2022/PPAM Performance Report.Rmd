@@ -1,0 +1,487 @@
+---
+title: "PromiseLand's Portfolio Allocation Model Performance Report"
+author: 
+- Wealth Management Department
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+urlcolor: blue
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[R]{\small \leftmark}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial adviser before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', fig.width = 10, fig.height = 5)
+```
+
+```{r, load libs, include=F, warning=F, message=F}
+library(ggplot2)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+```
+
+# Allocation Model
+
+## Strategic Asset Allocation (SAA)
+
+There are ten existing SAA models to suit the different risk appetite of our clients; five each for Cash and CPF-OA/SRS.
+
+```{r, prepare cash saa kable, include=FALSE, message=FALSE}
+# Weights vector
+us_cash_saa <- c(20,26,32,38,43)
+eu_cash_saa <- c(7,9,10,12,14)
+asia_cash_saa <- c(8,10,13,15,18)
+hq_bond_cash_saa <- c(36,28,20,13,8)
+hy_bond_cash_saa <- c(24,22,20,17,12)
+yield_enhancer_cash_saa <- c(5,5,5,5,5)
+
+#
+ppam_cash_saa_table <- rbind(us_cash_saa,
+      eu_cash_saa,
+      asia_cash_saa,
+      hq_bond_cash_saa,
+      hy_bond_cash_saa,
+      yield_enhancer_cash_saa) %>% 
+  as.data.frame() %>% 
+  mutate(Region = c('USA','Europe','Asia Ex. Japan','High Quality Bonds','High Yield Bond','Yield Enhancer'),
+         Conservative = V1,
+         `Moderately Conservative` = V2,
+         Balanced = V3,
+         `Moderately Aggressive` = V4,
+         Aggressive = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+ppam_cash_saa_kable <- kable(ppam_cash_saa_table, col.names = c('Region', 
+                                           'Conservative', 
+                                           'Moderately Conservative', 
+                                           'Balanced', 
+                                           'Moderately Aggressive', 
+                                           'Aggressive'),
+      align = 'cc', 
+      caption = 'Strategic Asset Allocation for Cash (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+
+ppam_cash_saa_kable
+```
+
+```{r, show cash saa kable, echo=FALSE, message=FALSE, warning=FALSE}
+ppam_cash_saa_kable
+```
+
+```{r, prepare cpfoa srs saa kable, include=FALSE, message=FALSE}
+# Weights vector
+us_cpf_saa <- c(20,26,32,38,43)
+eu_cpf_saa <- c(7,9,10,12,14)
+asia_cpf_saa <- c(8,10,13,15,18)
+hq_bond_cpf_saa <- c(36,28,20,13,8)
+hy_bond_cpf_saa <- c(24,22,20,17,12)
+yield_enhancer_cpf_saa <- c(5,5,5,5,5)
+
+#
+ppam_cpf_saa_table <- rbind(us_cpf_saa,
+      eu_cpf_saa,
+      asia_cpf_saa,
+      hq_bond_cpf_saa,
+      hy_bond_cpf_saa,
+      yield_enhancer_cpf_saa) %>% 
+  as.data.frame() %>% 
+  mutate(Region = c('USA','Europe','Asia Ex. Japan','High Quality Bonds','High Yield Bond','Yield Enhancer'),
+         Conservative = V1,
+         `Moderately Conservative` = V2,
+         Balanced = V3,
+         `Moderately Aggressive` = V4,
+         Aggressive = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+ppam_cpf_saa_kable <- kable(ppam_cpf_saa_table, col.names = c('Region', 
+                                           'Conservative', 
+                                           'Moderately Conservative', 
+                                           'Balanced', 
+                                           'Moderately Aggressive', 
+                                           'Aggressive'),
+      align = 'cc', 
+      caption = 'Strategic Asset Allocation for CPFOA/SRS (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+```{r, show cpfoa srs saa kable, echo=FALSE, message=FALSE, warning=FALSE}
+ppam_cpf_saa_kable
+```
+
+A Yield Enhancer Fund is a fund that seeks to take advantage of short-term pricing inefficiencies in the market in order to generate a higher expected return.
+
+In the event that the selected fund is **not available** on a certain platform, PromiseLand reserves the right to replace the Fund with any other similar fund.
+
+\newpage
+
+## Past Performances
+
+The tables below show the past performances (in SGD) of the model portfolios, for the various risk levels and fund sources.
+
+```{r, prepare cash performance kable, include=FALSE, message=FALSE}
+cash_cons_perf <- c(-7.00,-8.36,-6.46,-5.64,7.97)
+cash_modcons_perf <- c(-8.53,-9.31,-7.84,-6.02,8.82)
+cash_modagg_perf <- c(-11.63,-11.50,-10.58,-7.21,6.73)
+cash_agg_perf <- c(-13.03,-12.19,-11.84,-7.24,11.6)
+
+cash_past_perf_table <- rbind(cash_cons_perf,
+      cash_modcons_perf,
+      cash_modagg_perf,
+      cash_agg_perf) %>% 
+  as.data.frame() %>% 
+  mutate(`Risk Level` = c('Conservative', 
+                          'Moderately Conservative', 
+                          'Moderately Aggressive', 
+                          'Aggressive'),
+         `3 Months` = V1,
+         `6 Months` = V2,
+         `Year to Date` = V3,
+         `1 Year` = V4,
+         `Since Inception (pa)` = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+
+
+cash_past_perf_kable <- kable(cash_past_perf_table, col.names = c('Risk Level', 
+                                          '3 Months', 
+                                          '6 Months',
+                                          'Year to Date',
+                                          '1 Year',
+                                          'Since Inception (pa)'),
+      align = 'cc', 
+      caption = 'Past Performances for Cash (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+```{r, show cash performance kable, echo=FALSE, message=FALSE, warning=FALSE}
+cash_past_perf_kable
+```
+
+```{r, prepare cpfoa performance kable, include=FALSE, message=FALSE}
+cpf_cons_perf <- c(-5.44,-5.59,-4.98,-1.87,5.13)
+cpf_modcons_perf <- c(-6.73,-6.67,-6.13,-3.17,5.64)
+cpf_modagg_perf <- c(-9.31,-8.76,-8.38,-3.86,6.67)
+cpf_agg_perf <- c(-10.43,-9.82,-9.38,-4.32,8.09)
+
+cpf_past_perf_table <- rbind(cpf_cons_perf,
+      cpf_modcons_perf,
+      cpf_modagg_perf,
+      cpf_agg_perf) %>% 
+  as.data.frame() %>% 
+  mutate(`Risk Level` = c('Conservative', 
+                          'Moderately Conservative', 
+                          'Moderately Aggressive', 
+                          'Aggressive'),
+         `3 Months` = V1,
+         `6 Months` = V2,
+         `Year to Date` = V3,
+         `1 Year` = V4,
+         `Since Inception (pa)` = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+
+
+cpf_past_perf_kable <- kable(cpf_past_perf_table, col.names = c('Risk Level', 
+                                          '3 Months', 
+                                          '6 Months',
+                                          'Year to Date',
+                                          '1 Year',
+                                          'Since Inception (pa)'),
+      align = 'cc', 
+      caption = 'Past Performances for CPFOA (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+                                          
+cpf_past_perf_kable
+```
+
+```{r, show cpfoa performane kable, echo=FALSE, message=FALSE, warning=FALSE}
+cpf_past_perf_kable
+```
+
+```{r, prepare srs performance kable, include=FALSE, message=FALSE}
+srs_cons_perf <- c(-5.53,-5.56,-4.74,-1.81,4.68)
+srs_modcons_perf <- c(-6.72,-6.61,-5.82,-1.86,5.74)
+srs_modagg_perf <- c(-9.39,-8.79,-8.15,-3.89,6.10)
+srs_agg_perf <- c(-10.41,-9.73,-9.07,-4.23,6.74)
+
+srs_past_perf_table <- rbind(srs_cons_perf,
+      srs_modcons_perf,
+      srs_modagg_perf,
+      srs_agg_perf) %>% 
+  as.data.frame() %>% 
+  mutate(`Risk Level` = c('Conservative', 
+                          'Moderately Conservative', 
+                          'Moderately Aggressive', 
+                          'Aggressive'),
+         `3 Months` = V1,
+         `6 Months` = V2,
+         `Year to Date` = V3,
+         `1 Year` = V4,
+         `Since Inception (pa)` = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+
+
+srs_past_perf_kable <- kable(srs_past_perf_table, col.names = c('Risk Level', 
+                                          '3 Months', 
+                                          '6 Months',
+                                          'Year to Date',
+                                          '1 Year',
+                                          'Since Inception (pa)'),
+      align = 'cc', 
+      caption = 'Past Performances for SRS (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+                                          
+srs_past_perf_kable
+```
+
+```{r, show srs performane kable, echo=FALSE, message=FALSE, warning=FALSE}
+srs_past_perf_kable
+```
+
+\newpage
+
+# Appendix
+
+## Fund Selection (Cash)
+
+```{r, prepare cash funds names kable, include=FALSE, message=FALSE}
+us_cash_fund <- c('BGF World Financials Fund Class A2 USD', 'LU0106831901')
+eu_cash_fund <- c('Dimensional European Value Acc USD', 'IE00B1W6CV70')
+asia_cash_fund <- c('JPM China A-Share Opportunities USD', 'LU1255011170')
+hq_bond_cash_fund <- c('HSBC Global Short Duration Bond AC USD', 'LU1163226092')
+hy_bond_cash_fund <- c('United Asian High Yield Bond Acc SGD', 'SG9999010011')
+yield_enhancer_cash_fund <- c('Mirova Global Sustainable Equity Fund H-R-NPF/A SGD', 'LU1712237335')
+
+ppam_cash_fund_table <- rbind(us_cash_fund,
+      eu_cash_fund,
+      asia_cash_fund,
+      hq_bond_cash_fund,
+      hy_bond_cash_fund,
+      yield_enhancer_cash_fund) %>% 
+  as.data.frame() %>% 
+  mutate(Region = c('USA','Europe*','Asia Ex. Japan','High Quality Bonds**','High Yield Bonds','Yield Enhancer***'),
+         `Fund Name` = V1,
+         ISIN = V2)  %>% 
+  select(-V1, -V2) %>% as_tibble()
+  
+ppam_cash_fund_kable <- kable(ppam_cash_fund_table, col.names = c('Region', 
+                                           'Fund Name', 
+                                           'ISIN'),
+      align = 'cc', 
+      caption = 'Percentage Allocations for Cash (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+```{r, show cash fund names kable, echo=FALSE, message=FALSE, warning=FALSE}
+ppam_cash_fund_kable
+```
+
+```{r, prepare cash funds alloc kable, include=FALSE, message=FALSE}
+# Weights vector
+us_cash <- c(21,27,33,39,44)
+eu_cash <- c(7,9,10,12,14)
+asia_cash <- c(9,11,14,16,19)
+hq_bond_cash <- c(35,27,19,12,7)
+hy_bond_cash <- c(23,21,19,16,11)
+yield_enhancer_cash <- c(5,5,5,5,5)
+
+#
+ppam_cash_alloc_table <- rbind(us_cash,
+      eu_cash,
+      asia_cash,
+      hq_bond_cash,
+      hy_bond_cash,
+      yield_enhancer_cash) %>% 
+  as.data.frame() %>% 
+  mutate(Region = c('USA','Europe','Asia Ex. Japan','High Quality Bonds','High Yield Bonds','Yield Enhancer'),
+         Conservative = V1,
+         `Moderately Conservative` = V2,
+         Balanced = V3,
+         `Moderately Aggressive` = V4,
+         Aggressive = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+ppam_cash_alloc_kable <- kable(ppam_cash_alloc_table, col.names = c('Region', 
+                                           'Conservative', 
+                                           'Moderately Conservative', 
+                                           'Balanced', 
+                                           'Moderately Aggressive', 
+                                           'Aggressive'),
+      align = 'cc', 
+      caption = 'Percentage Allocations for Cash (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+
+```{r, show cash fund alloc kable, echo=FALSE, message=FALSE, warning=FALSE}
+ppam_cash_alloc_kable
+```
+
+\* Please note that for FAME and Navigator Clients, the fund will be [HSBC - GIF Europe Value](https://www.assetmanagement.hsbc.com/fund-centre/dpas-report/factsheet-bm-en-lu0047473722.pdf).  
+\*\* Please note that for Navigator Clients, the fund will be [Pimco GIS Global Bond E Acc USD](https://www.pimco.com.sg/en-sg/investments/gis/global-bond-fund/e-acc).  
+\*\*\* Please note that for FAME Clients, the fund will be [Fidelity Funds - Sustainable Asia Equity Fund A-DIST-SGD](https://www.fidelity.lu/funds/factsheet/LU0251144936).  
+
+More information regarding the funds can be found at the following links.
+
+USA: [BGF World Financials Fund Class A2 USD](https://www.blackrock.com/sg/en/literature/fact-sheet/bgf-world-financials-fund-class-a2-usd-factsheet-lu0106831901-sg-en-retail.pdf)  
+Europe: [Dimensional European Value Acc USD](https://www.dimensional.com/dfsmedia/f27f1cc5b9674653938eb84ff8006d8c/66901-source/options/download/european-value-fund-usd-acc.pdf)  
+Asia Ex. Japan: [JPM China A Share Opportunities USD](https://am.jpmorgan.com/ch/en/asset-management/per/products/jpm-china-a-share-opportunities-a-acc-usd-lu1255011170)  
+High Quality Bonds: [HSBC Global Short Duration Bond AC USD](https://www.global.assetmanagement.hsbc.com/fund-centre/dpas-report/factsheet-bm-en-lu1163226092.pdf)  
+High Yield Bonds: [United Asian High Yield Bond Acc USD](http://www.uobam.com.sg/uobam/assets/pdfs/fundfact/USD_asian_highyield.pdf)  
+Yield Enhancer: [Mirova Global Sustainable Equity Fund H-R-NPF/A SGD](https://www.im.natixis.com/us/mutual-funds/mirova-global-sustainable-equity-fund/ESGMX)  
+
+
+\newpage
+
+## Fund Selection (CPFOA/SRS)
+
+```{r, prepare cpfoa srs funds names kable, include=FALSE, message=FALSE}
+us_cpf_fund <- c('Harris Associates U.S. Equity Fund H-P/A(SGD)', 'LU1201861249')
+eu_cpf_fund <- c('Eastspring Pan European', 'SG9999002786')
+asia_cpf_fund <- c('FSSA Dividend Advantage A Q SGD Dist', 'SG9999002083')
+bond_cpf_fund <- c('Manulife Asia Pacific Investment Grade Bond A', 'SG9999011134')
+yield_enhancer_cpf_fund <- c('Schroder ISF Global Sustainable Growth F Acc SGD', 'LU2158556196')
+
+ppam_cpf_fund_table <- rbind(us_cpf_fund,
+      eu_cpf_fund,
+      asia_cpf_fund,
+      bond_cpf_fund,
+      yield_enhancer_cpf_fund) %>% 
+  as.data.frame() %>% 
+  mutate(Region = c('USA*','Europe','Asia Ex. Japan','Bonds','Yield Enhancer**'),
+         `Fund Name` = V1,
+         ISIN = V2)  %>% 
+  select(-V1, -V2 )%>% as_tibble()
+  
+ppam_cpf_fund_kable <- kable(ppam_cpf_fund_table, col.names = c('Region', 
+                                           'Fund Name', 
+                                           'ISIN'),
+      align = 'cc', 
+      caption = 'Percentage Allocations for CPFOA/SRS (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+```{r, show cpfoa srs fund names kable, echo=FALSE, message=FALSE, warning=FALSE}
+ppam_cpf_fund_kable
+```
+
+```{r, prepare cpfoa srs funds alloc kable, include=FALSE, message=FALSE}
+# Weights vector
+us_cpf <- c(21,27,33,39,44)
+eu_cpf <- c(7,9,10,12,14)
+asia_cpf <- c(9,11,14,16,19)
+bond_cpf <- c(58,48,38,28,18)
+yield_enhancer_cpf <- c(5,5,5,5,5)
+
+#
+ppam_cpf_alloc_table <- rbind(us_cpf,
+      eu_cpf,
+      asia_cpf,
+      bond_cpf,
+      yield_enhancer_cpf) %>% 
+  as.data.frame() %>% 
+  mutate(Region = c('USA','Europe','Asia Ex. Japan','Bonds','Yield Enhancer'),
+         Conservative = V1,
+         `Moderately Conservative` = V2,
+         Balanced = V3,
+         `Moderately Aggressive` = V4,
+         Aggressive = V5) %>% 
+  select(-V1, -V2, -V3, -V4, -V5) %>% as_tibble()
+
+ppam_cpf_alloc_kable <- kable(ppam_cpf_alloc_table, col.names = c('Region', 
+                                           'Conservative', 
+                                           'Moderately Conservative', 
+                                           'Balanced', 
+                                           'Moderately Aggressive', 
+                                           'Aggressive'),
+      align = 'cc', 
+      caption = 'Percentage Allocations for CPFOA/SRS (\\%)',
+      format = 'latex',
+      booktabs = TRUE,
+      linesep = "") %>% 
+  kable_styling(latex_options="scale_down") %>% 
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+```{r, show cpfoa srs fund alloc kable, echo=FALSE, message=FALSE, warning=FALSE}
+ppam_cpf_alloc_kable
+```
+
+
+\* Please note that for Navigator clients, the fund will be [Pinebridge US Large Cap Research Enhanced Fund - Class A5CP SGD](https://www.pinebridge.com/_assets/pdfs/funds/fact-sheets/PineBridge-US-Large-Cap-Research-Enhanced-Fund-Class-A5CP-Units_ENG.pdf).  
+\*\* Please note that for SRS funds, the fund will be [Fidelity Funds - Sustainable Asia Equity Fund A-DIST-SGD](https://www.fidelity.lu/funds/factsheet/LU0251144936).  
+
+More information regarding the funds can be found at the following links.
+
+USA: [Harris Associates U.S. Equity Fund H-P/A(SGD)](https://im.natixis.com/cs/intl/documents/document.jsp?did=a0R0J00000IhFQ4UAN)  
+Europe: [Eastspring Pan European](https://www.eastspring.com/sg/funds/fund-prices/all-funds/funddetails?isincode=SG9999002786&fundname=Eastspring%20Investments%20Unit%20Trusts%20-%20Pan%20European%20Fund)  
+Asia Ex. Japan: [FSSA Dividend Advantage A Q SGD Dist](https://www.firstsentierinvestors.com/uploadedFiles/Content/UploadedLiterature/auto/Asia/PdfFundFactsheets/First-State-Dividend-Advantage-SGD-en-sg-SG9999002083.pdf)  
+Bonds: [Manulife Asia Pacific Investment Grade Bond A](https://www.manulife.com.sg/en/funds/funds-pb.html/funddetails/MAPI)  
+Yield Enhancer: [Schroder ISF Global Sustainable Growth F Acc SGD](http://www.schroders.com/getfunddocument?oid=1.9.3589031)  
+
+
+
+
+
+
+
+
+
+

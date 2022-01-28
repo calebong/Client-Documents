@@ -1,0 +1,393 @@
+---
+title: "PromiseLand's Monthly Market Outlook"
+subtitle: 'For February 2022'
+author: 
+- Caleb Ong Jun Yi
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+    keep_md: true
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[R]{\small \leftmark}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial adviser before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+
+\newpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', fig.width = 10, fig.height = 6)
+```
+
+```{r, load libs, include=F, warning=F, message=F}
+library(ggplot2)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+```
+
+
+```{r, load datas, include=F, warning=F, message=F}
+load("~/Documents/Working Directory/Market-Forecast/USA/usSector.RData")
+load("~/Documents/Working Directory/Market-Forecast/China/cnSector.RData")
+load("~/Documents/Working Directory/Market-Forecast/Europe/euSector.RData")
+
+load("~/Documents/Working Directory/Market-Forecast/USA/usMacDf.RData")
+load("~/Documents/Working Directory/Market-Forecast/China/cnMacDf.RData")
+load("~/Documents/Working Directory/Market-Forecast/Europe/euMacDf.RData")
+```
+
+```{r, include=FALSE, eval=F}
+usMacDfRet %>% ungroup() %>% 
+  select(-contains('lag')) %>% 
+  select(-ticker,
+         -adjClose) %>% 
+  pivot_longer(cols = 2:32) %>% 
+  ggplot(aes(x = date, y =value)) + geom_line() + facet_wrap(~name, scales = 'free_y')
+  
+```
+
+# USA
+
+## Monthly Review
+
+The US market started off well in January. Markets registered a positive performance for the first half of January, as investors remain cautiously optimistic about the recovery trajectory of the US economy. Since then, markets have been on a wild ride; heightened volatility in the markets surfaced as investors brace for tighter monetary policy from the Fed. Treasury yields have jumped sharply to start the year in anticipation of tighter monetary policy from the Fed. Last week, the benchmark 10-year note yield briefly broke above 1.9%. Most recently, on Tuesday, the yield closed at 1.77% — that value is still more than 20 basis points above that of end 2021.
+
+Energy performed the best as inflation continues to remain at elevated levels. Financials, as well as defensive sectors like Consumer Staples and Utilities, suffered minimal declines, whereas growth oriented sectors suffered the worst declines.
+
+```{r, create mtd us, message=F, echo=F}
+usRankMthTable <- usRankMthTable %>% 
+  mutate(adjClose = signif(adjClose, 3)*100)
+```
+
+```{r, show us mtd plot, message=F, echo=F}
+usRankMthTable %>% 
+  ggplot(aes(x = reorder(title, -adjClose), y = adjClose)) + geom_bar(stat = 'identity', fill = 'midnightblue') +
+  theme_fivethirtyeight() +
+  labs(title = 'USA Sector Returns', subtitle = "Source: Bloomberg, author's compilation \nData as of Jan 2021") +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90)) + theme(text = element_text(family = "Times")) +
+  ylab('Month-to-Date Returns (%)')
+
+```
+
+
+```{r, show us mtd, message=F, echo=F}
+kable(
+  usRankMthTable %>% arrange(desc(adjClose)),
+  col.names = c('Sector',
+                'Return'),
+  align = 'cc',
+  caption = 'USA Sector Monthly Returns (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+
+## Monthly Outlook
+
+Fed policy makers are already expected to lay the groundwork for a March rate increase. Uncertainties in the magnitude of the rate hike have caused investors to worry that the Fed will tighten monetary policy more aggressively than anticipated. At the most recent FOMC meeting, Fed Chair Powell mentioned that there is plenty of room to raise interest rates before harming the economy. The general consensus among market participants is that a March rate hike is certain. Moving forward, investors will continue to look for clues on when — and by how much — the Fed will raise interest rates later this year. With spare capacity remaining but the initial reopening surge over, our view is that the pace of growth is set to moderate.
+
+Energy prices continue to be a talking point; oil held above $85 a barrel after industry estimates showed a draw in US stockpiles. The American Petroleum Institute reported that US crude stockpiles shrunk by 875,000 barrels last week. Furthermore, according to the IMF, inflation has accelerated as the economy recovers from the brief but extremely severe recession in 2020, and is expected to remain elevated for "longer than envisioned" amid ongoing supply-chain disruptions and high energy prices. Accordingly, we expect that energy prices should remain buoyant.
+
+## Base Case Estimates
+
+Our models have considered all the information set up to this point, and estimated the relative rankings and sector return expectations.
+
+```{r, create future us, message=F, echo=F}
+usRankTable <- usRankTable %>% 
+  mutate(across(.cols = where(is.numeric),
+                .fns = function(.x) signif(.x, 3)*100 ))
+```
+
+```{r, show us future kable, message=F, echo=F}
+kable(
+  usRankTable %>% arrange(desc(.value)),
+  col.names = c('Sector',
+                'Expected Return',
+                'Bear Case',
+                'Bull Case'),
+  align = 'cc',
+  caption = 'USA Sector Return Expectations (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+Recent market events provide for some interesting short-term opportunities. 
+
+Energy prices should begin to subside as supply-demand imbalances gradually wane towards the second half of 2022, and as monetary policies in major economies respond accordingly. The ongoing supply-chain disruptions and elevated energy prices should still provide for some tactical upside plays.
+
+The pullback in the Technology Sector presents a really attractive buying opportunity, after falling more than 15% across the board. These stocks are now relatively cheaper, and these are the stocks which loved by Wall Street and the retail investor; we expect investor interest in this sector to, at the very least, maintain at current levels.
+
+Considering secular trends and current uncertainties, we advocate for one to remain invested in quality and defensive sectors; this sell-off is almost reminiscent of fears that continued price declines will lead to a recession, but the Fed has not even started to hike rates. We believe that recent market happenings are attributable to investor overreactions.
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=12}
+usSectorfutureplot
+```
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+usFactorfutureplot
+```
+
+\newpage
+
+# Europe
+
+```{r, include=FALSE, eval=F}
+euMacDfRet %>% ungroup() %>% 
+  select(-contains('lag')) %>% 
+  select(-ticker,
+         -adjClose) %>% 
+  pivot_longer(cols = 2:25) %>% 
+  ggplot(aes(x = date, y =value)) + geom_line() + facet_wrap(~name, scales = 'free_y')
+  
+```
+
+## Monthly Review
+
+Similar to the US, energy performed the best as inflation continues to remain at elevated levels, and as the power crisis persists in Europe; various EU member countries resorted to burning more coal and fuel oil due to the under-performance by wind power as a source of energy. European sectors have been mixed across the board, as military conflicts in Ukraine and risks in the Middle East stoked fears of supply disruptions. Sectors which are resilient to persistently high inflation and short term market uncertainties performed relatively better, such as the Value, Large Cap, and Financials sector. 
+
+
+```{r, create mtd eu, message=F, echo=F}
+euRankMthTable <- euRankMthTable %>% 
+  mutate(adjClose = signif(adjClose, 3)*100)
+```
+
+```{r, show eu mtd plot, message=F, echo=F}
+euRankMthTable %>% 
+  ggplot(aes(x = reorder(title, -adjClose), y = adjClose)) + geom_bar(stat = 'identity', fill = 'midnightblue') +
+  theme_fivethirtyeight() +
+  labs(title = 'Europe Sector Returns', subtitle = "Source: Bloomberg, author's compilation \nData as of Jan 2021") +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90)) + theme(text = element_text(family = "Times")) +
+  ylab('Month-to-Date Returns (%)')
+
+```
+
+
+```{r, show eu mtd, message=F, echo=F}
+kable(
+  euRankMthTable %>% arrange(desc(adjClose)),
+  col.names = c('Sector',
+                'Return'),
+  align = 'cc',
+  caption = 'Europe Sector Monthly Returns (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+## Monthly Outlook
+
+Bottlenecks in the supply chain, especially those affecting the auto industry, prompted the IMF to estimate that growth in Germany — the largest economy in Europe — would decline by 0.8 percentage points, twice as much as the average of all countries that use the Euro. The resurgence of the Omicron coronavirus variant has also been holding back economic activity, but it is nowhere near to the same extent as the virus did before. For now, we anticipate for growth in Europe to still be on track, albeit at a slower pace.
+
+There are differences that will put major central banks on divergent paths. In the US, inflation is running hotter and - with rising wages an additional driver - has more risk of staying above target. We now think that the Fed will accelerate the pace of taper, opening the possibility of a rate hike as early as March if inflation stays high. In the Euro area, in contrast, we think inflation is set to fall back to 1% and market expectations that the ECB will liftoff in 2022 will be frustrated.
+
+## Base Case Estimates
+
+Our models have considered all the information set up to this point, and estimated the relative rankings and sector return expectations.
+
+```{r, create future eu, message=F, echo=F}
+euRankTable <- euRankTable %>% 
+  mutate(across(.cols = where(is.numeric),
+                .fns = function(.x) signif(.x, 3)*100 ))
+```
+
+```{r, show eu future kable, message=F, echo=F}
+kable(
+  euRankTable %>% arrange(desc(.value)),
+  col.names = c('Sector',
+                'Expected Return',
+                'Bear Case',
+                'Bull Case'),
+  align = 'cc',
+  caption = 'Europe Sector Return Expectations (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+Recent market events provide for some interesting short-term opportunities. 
+
+Similar to the US, energy prices should begin to subside as supply-demand imbalances gradually wane towards the second half of 2022, and as monetary policies in major economies respond accordingly. The ongoing supply-chain disruptions and energy power crisis in Europe should provide for some tactical upside plays.
+
+Similar to the US, the pullback in the Technology Sector presents a really attractive buying opportunity, after falling more than 10% across the board.
+
+Considering secular trends and current uncertainties, we advocate for one to remain invested in quality and defensive sectors. We believe that recent market happenings are attributable to investor overreactions.
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14}
+euSectorfutureplot
+```
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+euFactorfutureplot
+```
+
+
+\newpage
+
+# China
+
+```{r, include=FALSE, eval=F}
+cnMacDfRet %>% ungroup() %>% 
+  select(-contains('lag')) %>% 
+  select(-ticker,
+         -adjClose) %>% 
+  pivot_longer(cols = 2:13) %>% 
+  ggplot(aes(x = date, y =value)) + geom_line() + facet_wrap(~name, scales = 'free_y')
+  
+```
+
+## Monthly Review
+
+Energy, Financials, and Large Cap were the top performers. 4Q GDP numbers confirmed that China is experiencing an economic slowdown, which is led by real estate investment and cautious consumer sentiment. In this current context, we believe that investors rotated out of the more volatile and uncertain sectors, and sought safety in the Financials and Large Cap sectors.
+
+```{r, create mtd cn, message=F, echo=F}
+cnRankMthTable <- cnRankMthTable %>% 
+  mutate(adjClose = signif(adjClose, 3)*100)
+```
+
+```{r, show cn mtd plot, message=F, echo=F}
+cnRankMthTable %>% 
+  ggplot(aes(x = reorder(title, -adjClose), y = adjClose)) + geom_bar(stat = 'identity', fill = 'midnightblue') +
+  theme_fivethirtyeight() +
+  labs(title = 'China Sector Returns', subtitle = "Source: Bloomberg, author's compilation \nData as of Jan 2021") +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent",colour = NA),
+        legend.key = element_blank(),
+        plot.subtitle = element_text(size = 8),
+        panel.background = element_rect(fill = "transparent",colour = NA),
+        plot.background = element_rect(fill = "transparent",colour = NA),
+        axis.title = element_text(),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90)) + theme(text = element_text(family = "Times")) +
+  ylab('Month-to-Date Returns (%)')
+
+```
+
+
+```{r, show cn mtd, message=F, echo=F}
+kable(
+  cnRankMthTable %>% arrange(desc(adjClose)),
+  col.names = c('Sector',
+                'Return'),
+  align = 'cc',
+  caption = 'China Sector Monthly Returns (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+
+## Monthly Outlook
+
+As the new Omicron COVID-19 variant had spread throughout the world, countries, including China, reimposed lockdown restrictions. Such restrictions, coupled with rising energy prices and supply disruptions, have resulted in higher and more broad-based inflation than anticipated. Furthermore, the ongoing retrenchment of China's Real Estate sector and slower-than-expected recovery of private consumption have limited growth prospects. Economic indicators are already reflecting this; for instance, the slowdown in the growth of retail sales shows that consumers have reduced their spending level. This signals a slowdown or decline in economic activity. The slowdown in China, which is both a major supplier and buyer of goods traded with other countries, is also setting off reverberations around the world.
+
+We believe that economic growth in China is set to pick up again with the introduction of further stimulus. The central bank has already cut the loan prime rate by 20 basis points, in addition to multiple cuts to the reserve requirement ratio, even as the Fed begins to normalize policy. With China facing multiple headwinds to growth, additional space to stimulate is welcome.
+
+## Base Case Estimates
+
+Our models have considered all the information set up to this point, and estimated the relative rankings and sector return expectations.
+
+```{r, create future cn, message=F, echo=F}
+cnRankTable <- cnRankTable %>% 
+  mutate(across(.cols = where(is.numeric),
+                .fns = function(.x) signif(.x, 3)*100 ))
+```
+
+```{r, show cn future kable, message=F, echo=F}
+kable(
+  cnRankTable %>% arrange(desc(.value)),
+  col.names = c('Sector',
+                'Expected Return',
+                'Bear Case',
+                'Bull Case'),
+  align = 'cc',
+  caption = 'China Sector Return Expectations (\\%)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header"))
+```
+
+China has already cut its key rates in a bid to boost its economy. We believe that further stimulus measures are already in the pipeline to ease the pressure on the macro economy.
+
+We believe that cyclical sectors could present an interesting investment opportunity. Given that the Materials sector involves the processing and sale of materials used in manufacturing and production to other sectors, an increase in general economic activity and output should benefit the Materials sector to a greater extent, as manufacturers and producers are likely to increase their demand of raw materials, which are used in the manufacturing and production process. And as manufacturing and economic activity picks up, we expect the Industrials sector to perform well as well, given that the sector is involved in the manufacturing of machinery, handheld tools, and industrial products.
+
+
+
+\newpage
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=12}
+cnSectorfutureplot
+```
+
+\newpage
+
+# Ending Notes
+
+Please refer to our client introductory document (Introduction to PromiseLand's Economic Forecasts) for a brief description of our methodology. 
+
+Clients are reminded to diligently monitor their holdings. Please contact your financial advisor for the latest market expectations, or if you have any questions. Alternatively, you may contact us at +65 6505 4100, or email us at <enquiries@promiseland.com.sg>.
