@@ -1,0 +1,410 @@
+---
+title: "PromiseLand's Monthly Market Outlook"
+subtitle: 'For Mar 2022'
+author: 
+- Caleb Ong Jun Yi
+date: "`r format(Sys.Date()-1, '%d %B %Y')`"
+output:
+  pdf_document:
+    keep_md: true
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+header-includes:
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=12cm]{Logo_O.png}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
+  - \usepackage{graphicx}
+  - \usepackage{lastpage}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \input{insbox} 
+  - \pagestyle{fancy}
+  - \renewcommand{\headrulewidth}{0.4pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
+  - \setlength{\headheight}{27pt}
+  - \addtolength{\topmargin}{-10pt}
+  - \fancyhead[L]{\includegraphics[width=1cm]{Logo(Grape)_Blue.png}}
+  - \fancyhead[R]{\small \leftmark}
+  - \fancyhead[C]{\small Page {\thepage} of \pageref{LastPage}}
+  - \fancyfoot[C]{\tiny This document is prepared by PromiseLand Independent Pte Ltd. It does not reflect any views from any other agency, organization, employer or company. This document is for information only. It does not constitute an offer or solicitation to deal in units of any investments. It was prepared with no consideration for any specific financial situation, objective or need. No warranty is given and no liability is accepted for any loss arising directly or indirectly as a result of any action taken by a person acting on the information, opinion, forecast, or estimate contained herein. Past performance, prediction, projection or forecast of any economic trends or financial markets are not necessarily indicative of the future or likely performance of any investments. Please read the prospectus of the funds to understand the risks associated in investing in the fund, which may be obtained from PromiseLand Independent Pte. Ltd. or directly from the relevant entity. Potential investors may wish to seek advice from a financial adviser before making any investment decision. This advertisement has not been reviewed by the Monetary Authority of Singapore.}
+mainfont: Times New Roman
+fontsize: 11pt
+---
+
+```{r setup, include=FALSE, message=F, echo=F}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=F, echo=F}
+library(riingo)
+library(dplyr)
+library(tidyr)
+# library(xts)
+library(ggplot2)
+# library(plotly)
+library(timetk)
+library(lubridate)
+library(stringr)
+library(data.table)
+library(purrr)
+library(kableExtra)
+```
+
+```{r, message=F, echo=F, eval=F}
+# Set API
+tiingo_api <- '8cdcf870de9c79ffcb439e879b28a062f770eb58'
+riingo_set_token(tiingo_api, inform = TRUE)
+setDefaults(getSymbols.tiingo, api.key=tiingo_api)
+
+# Stocks vector
+stocks <- c('URTH','VPL','EEM','SPY','FEZ','GXC','LQD','HYG') # World, Asia, EM, USA, EU, China, HQ, HY
+
+# Stock prices
+spDf <- furrr::future_map(
+  .x = stocks,
+  .f = function(.x) {
+    riingo_set_token('8cdcf870de9c79ffcb439e879b28a062f770eb58', inform = F)
+    tryCatch(riingo_prices(ticker = .x,
+                                   start_date = '2000-01-01') %>% suppressWarnings(),
+             error =  function(e){;NULL})
+  },
+  .progress = TRUE,
+  .options = furrr::furrr_options(seed = TRUE)) %>%
+  compact() %>% rbindlist(use.names = TRUE) %>% 
+  tibble() %>% group_by(ticker) %>% nest()
+
+spDf <- spDf %>% mutate(xts = purrr::map(.x = data,
+                                 function(.x) {xts(.x[,7], order.by = .x$date) %>% 
+                                     CalculateReturns(method = 'log')
+                                     } ))
+
+spDf <- spDf %>% ungroup() %>% mutate(
+  xtsOut = furrr::future_map(.x = xts,
+                             function(.x) {
+                               table.ProbOutPerformance(
+                                 R = .x[, 1],
+                                 Rb = xts(rep(0, length(.x)), order.by = index(.x)),
+                                 period_lengths = c(5, 21, 63, 126, 252, 504, 756)
+                               )
+                             },
+  .progress = TRUE,
+  .options = furrr::furrr_options(seed = TRUE))
+)
+
+save(spDf, file = 'spDf.RData')
+```
+
+```{r, message=F, echo=F}
+load('spDf.RData')
+
+world <- spDf$xtsOut[[1]]
+asia <- spDf$xtsOut[[2]]
+em <- spDf$xtsOut[[3]]
+usa <- spDf$xtsOut[[4]]
+eu <- spDf$xtsOut[[5]]
+china <- spDf$xtsOut[[6]]
+hq <- spDf$xtsOut[[7]]
+hy <- spDf$xtsOut[[8]]
+
+colnames(world)<- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(asia) <- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(em) <- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(usa)<- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(eu) <- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(china)<- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(hq) <- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+colnames(hy) <- c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        )
+
+world$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+asia$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+em$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+usa$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+eu$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+china$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+hq$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+hy$`Period Lengths` <- c('1 Week','1 Month','1 Quarter','6 Months','1 Year','2 Years','3 Years')
+
+world <- world %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+asia <- asia %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+em <- em %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+usa <- usa %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+eu <- eu %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+china <- china %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+hq <- hq %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+hy <- hy %>% mutate(across(where(is.numeric), .fns = function(.x) round(.x, 4)))
+```
+
+\newpage
+
+# Monthly Review
+
+The month of February has been a hectic month for financial markets; most notably, the initial tensions between Ukraine and Russia have culminated into a full-scale invasion of Ukraine by Russian forces. Markets as a whole have sold off since then, as investors, who are unsure about the implications of this crisis, accelerate their efforts to de-risk their investment portfolios.
+
+Accordingly, given this difficult period, there will be no expected market sector return rankings for this edition of our market outlook. **Instead, we strongly urge investors to remain invested.** While one might be successful in trying to time the market by scaling up on one's active monitoring efforts of the markets, a considerable amount of effort is needed, given the fluidity of the situation. In addition, there are numerous challenges when it comes to timing the market.
+
+The following tables compare the frequencies and probabilities of outperformance of various ETFs serving as proxies for various market indices across varying investment holding period lengths, through time. It displays the probability of the index registering a positive return if the investment is made at any given prior point in time, and held for the duration of the period length.
+
+## iShares MSCI World ETF
+
+iShares MSCI World ETF is used as a proxy for the performance of World Equities (MSCI World Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  world,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'iShares MSCI World ETF (Start Date: 2012-01-12)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+## Vanguard Pacific Stock Index Fund ETF
+
+Vanguard Pacific Stock Index Fund ETF is used as a proxy for the performance of Asia-Pacific Equities (MSCI Pacific IMI).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  asia,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'Vanguard Pacific Stock Index Fund ETF (Start Date: 2005-03-10)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+\newpage
+
+## iShares MSCI Emerging Markets ETF
+
+iShares MSCI Emerging Markets ETF is used as a proxy for the performance of Emerging Market Equities (MSCI Emerging Markets Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  em,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'iShares MSCI Emerging Markets ETF (Start Date: 2003-04-14)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+## SPDR S&P 500 ETF Trust
+
+SPDR S&P 500 ETF Trust is used as a proxy for the performance of US Equities (S&P500 Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  usa,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'SPDR S\\&P 500 ETF Trust (Start Date: 2000-01-03)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+## SPDR Euro Stoxx 50 ETF
+
+SPDR Euro Stoxx 50 ETF is used as a proxy for the performance of Europe Equities (Stoxx50 Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  eu,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'SPDR Euro Stoxx 50 ETF (Start Date: 2002-10-21)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+## SPDR S&P China ETF
+
+SPDR S&P China ETF is used as a proxy for the performance of China Equities (S&P China BMI Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  china,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'SPDR S\\&P China ETF (Start Date: 2007-03-23)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+## iShares iBoxx Inv Grade Corporate Bond ETF
+
+iShares iBoxx Inv Grade Corporate Bond ETF is used as a proxy for the performance of US investment grade corporate bonds (Markit iBoxx USD Liquid Investment Grade Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  hq,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'iShares iBoxx Inv Grade Corporate Bond ETF (Start Date: 2002-07-26)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+## iShares iBoxx High Yield Corporate Bond ETF
+
+iShares iBoxx High Yield Corporate Bond ETF is used as a proxy for the performance of US high yield corporate bonds (Markit iBoxx USD Liquid High Yield Index).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(
+  hy,
+  col.names = c(
+                          'Period Lengths',
+                          'Frequency of Outperformance',
+                          'Frequency of Underperformance',
+                          'Total Periods',
+                          'Probability of Outperformance',
+                          'Probability of Underperformance'
+                        ),
+  align = 'cc',
+  caption = 'iShares iBoxx High Yield Corporate Bond ETF (Start Date: 2007-04-11)',
+  format = 'latex',
+  booktabs = TRUE,
+  linesep = ""
+) %>%
+  kable_styling(latex_options = c("HOLD_position", "repeat_header","scale_down"))
+```
+
+The virtues of remaining invested can be clearly seen; across the varying holding period lengths, there is a greater likelihood of the index registering a positive return, than a negative return. Furthermore, it is mostly the case that as the holding period length increases, the probability of the index registering a positive return increases.
+
+**We would again like to advocate for investors to remain invested; being led by fear and offloading positions hastily only realize a loss for investors. In addition, given the fluid situation, there is a very low likelihood of benefiting from market timing strategies.**
+
+We continue to await for the latest stream of economic data, which will be released through March, to guide our expectations for the next month.
+
+# Ending Notes
+
+Please refer to our client introductory document (Introduction to PromiseLand's Economic Forecasts) for a brief description of our methodology. 
+
+Clients are reminded to diligently monitor their holdings. Please contact your financial advisor for the latest market expectations, or if you have any questions. Alternatively, you may contact us at +65 6505 4100, or email us at <enquiries@promiseland.com.sg>.
+
