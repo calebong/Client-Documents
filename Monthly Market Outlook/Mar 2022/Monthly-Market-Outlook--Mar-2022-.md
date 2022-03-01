@@ -1,6 +1,6 @@
 ---
 title: "PromiseLand's Monthly Market Outlook"
-subtitle: 'For Mar 2022'
+subtitle: 'For March 2022'
 author: 
 - Caleb Ong Jun Yi
 date: "28 February 2022"
