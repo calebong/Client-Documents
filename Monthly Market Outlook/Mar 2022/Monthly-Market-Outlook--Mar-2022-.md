@@ -49,7 +49,7 @@ The month of February has been a hectic month for financial markets; most notabl
 
 Accordingly, given this difficult period, there will be no expected market sector return rankings for this edition of our market outlook. **Instead, we strongly urge investors to remain invested.** While one might be successful in trying to time the market by scaling up on one's active monitoring efforts of the markets, a considerable amount of effort is needed, given the fluidity of the situation. In addition, there are numerous challenges when it comes to timing the market.
 
-The following tables compare the frequencies and probabilities of outperformance of various ETFs serving as proxies for various market indices across varying investment holding period lengths, through time. It displays the probability of the index registering a positive return if the investment is made at any given prior point in time, and held for the duration of the period length.
+The following tables compare the frequencies and probabilities of outperformance of various ETFs serving as proxies for various market indices across varying investment holding period lengths, through time. The tables display the probability of each index registering a positive return if the investment is made at any given prior point in time, and held for the duration of the period length. A probability of outperformance represents the probability of registering a positive return, while a probability of underperformance represents the probability of registering a negative return.
 
 ## iShares MSCI World ETF
 
